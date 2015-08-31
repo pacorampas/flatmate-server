@@ -74,12 +74,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lintspaces');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  //grunt.loadNpmTasks('grunt-shell');
-  //grunt.loadNpmTasks('grunt-bg-shell');
   grunt.loadNpmTasks('grunt-express-server');
 
   grunt.registerTask('build', ['clean', 'uglify:min', 'jshint', 'lintspaces', 'express:dev', 'watch']);
-  //grunt.registerTask('buildProd', ['clean', 'uglify', 'jshint', 'less:production', 'lintspaces']);
 
   // Default task(s).
   grunt.registerTask('default', ['build']);
