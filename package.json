@@ -11,7 +11,8 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "express-form": "^0.12.4"
+    "express-form": "^0.12.4",
+    "mongoose": "^4.1.4"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -23,7 +24,6 @@
     "grunt-express-server": "^0.5.1",
     "grunt-lintspaces": "^0.7.0",
     "grunt-shell": "^1.1.2",
-    "mongodb": "^1.4.39",
-    "mongoskin": "^1.4.13"
+    "mongodb": "^1.4.39"
   }
 }

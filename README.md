@@ -14,5 +14,5 @@
 - Run mongo: $ mongod
 - Go to project folder: cd go/to/project/folder:
 - Update dependencies: npm install
-- Start grunt: go/to/project/folder$ grunt
+- Start grunt: grunt
   * Express is listening on localhost:3000
