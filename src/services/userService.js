@@ -47,11 +47,9 @@
     getById: function(id) {
       return new Promise(function(resolve, reject) {
         User.findById(id, function(err, doc) {
-          console.log(err);
           if (err) {
             reject(err);
           } else {
-            console.log(doc);
             resolve(doc);
           }
         });

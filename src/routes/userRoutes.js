@@ -2,10 +2,11 @@
   'use strict';
 
   module.exports = function(app) {
-    var userController = require('../controllers/userController.min');
+    var userService = require('../services/userService.min');
+    var authService = require('../services/authService.min');
 
     app.param('userId', function(req, res, next, id) {
-      userController.getById(id).then(function(user) {
+      userService.getById(id).then(function(user) {
         req.user = user;
         return next();
       }).catch(function(err) {
@@ -14,8 +15,9 @@
       });
     });
 
-    app.get('/users/all', function(req, res, next) {
-      userController.getAll().then(function(users) {
+    app.get('/users/all', authService.ensureAuthenticated,
+        function(req, res, next) {
+      userService.getAll().then(function(users) {
         res.status(200).json(users);
       }).catch(function(err) {
         res.send(500, err);
@@ -23,10 +25,9 @@
     });
 
     app.post('/user', function(req, res, next) {
-      userController.add(req.body).then(function(user) {
-        res.status(200).json(user);
+      userService.add(req.body).then(function(user) {
+        res.status(200).json(authService.createToken(user));
       }).catch(function(err) {
-        console.log(err);
         res.send(500, err);
       });
     });
