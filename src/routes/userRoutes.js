@@ -18,16 +18,16 @@
       userController.getAll().then(function(users) {
         res.status(200).json(users);
       }).catch(function(err) {
-        res.send(500, err.message);
+        res.send(500, err);
       });
     });
 
     app.post('/user', function(req, res, next) {
-      console.log(req.body);
       userController.add(req.body).then(function(user) {
         res.status(200).json(user);
       }).catch(function(err) {
-        res.send(500, err.message);
+        console.log(err);
+        res.send(500, err);
       });
     });
 
