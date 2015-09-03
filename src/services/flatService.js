@@ -2,13 +2,11 @@
   'use strict';
 
   var mongoose = require('mongoose');
-  var Flat  = mongoose.model('flat');
-  var User  = mongoose.model('flat');
+  var FlatMongoose = mongoose.model('flat');
 
   module.exports = {
     add: function(flat) {
-      console.log(flat);
-      var flat = new Flat({
+      var flat = new FlatMongoose({
         name: flat.name,
         owner: flat.ownerId,
         mates: flat.mates
@@ -25,15 +23,16 @@
     },
     getAll: function() {
       return new Promise(function(resolve, reject) {
-        Flat.find(function(err, flats) {
-          User.populate(flats, {path: 'owner mates'}, function(err, flats) {
+        FlatMongoose
+          .find()
+          .populate({path: 'owner mates'})
+          .exec(function(err, flats) {
             if(err) {
               reject(err);
             } else {
               resolve(flats);
             }
           });
-        });
       });
     }
   }

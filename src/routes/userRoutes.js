@@ -15,8 +15,7 @@
       });
     });
 
-    app.get('/users/all', authService.ensureAuthenticated,
-        function(req, res, next) {
+    app.get('/apis/users/all', function(req, res, next) {
       userService.getAll().then(function(users) {
         res.status(200).json(users);
       }).catch(function(err) {
@@ -44,7 +43,7 @@
       });
     });
 
-    app.get('/user/:userId', function(req, res) {
+    app.get('/apis/user/:userId', function(req, res) {
       res.status(200).jsonp(req.user);
     })
   }
