@@ -10,7 +10,7 @@
       var payload = {
         sub: user._id,
         iat: moment().unix(),
-        exp: moment().add(60, 'minutes').unix(),
+        exp: moment().add(10, 'days').unix(),
       };
 
       return jwt.encode(payload, config.TOKEN_SECRET);
