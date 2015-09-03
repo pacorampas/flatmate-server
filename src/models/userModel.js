@@ -11,6 +11,10 @@ var userSchema = new Schema({
     index: { unique: true, dropDups: true },
     required: true,
     match: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+  },
+  password: {
+    type: String,
+    required: true
   }
 });
 

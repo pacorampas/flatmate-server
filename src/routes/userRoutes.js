@@ -20,15 +20,27 @@
       userService.getAll().then(function(users) {
         res.status(200).json(users);
       }).catch(function(err) {
-        res.send(500, err);
+        res.send(401, err);
       });
     });
 
-    app.post('/user', function(req, res, next) {
+    app.post('/register', function(req, res, next) {
       userService.add(req.body).then(function(user) {
         res.status(200).json(authService.createToken(user));
       }).catch(function(err) {
         res.send(500, err);
+      });
+    });
+
+    app.get('/login', function(req, res, next) {
+      userService.getByEmail(req.body.email).then(function(user) {
+        if (req.body.password === user.password) {
+          res.status(200).json(authService.createToken(user));
+        } else {
+          res.send(401);
+        }
+      }).catch(function(err) {
+        res.send(401);
       });
     });
 

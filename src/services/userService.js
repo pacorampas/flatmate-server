@@ -19,7 +19,8 @@
     add: function(user) {
       var user = new User({
         name: user.name,
-        email: user.email
+        email: user.email,
+        password: user.password
       });
       return new Promise(function(resolve, reject) {
         user.save(function(err, user) {
