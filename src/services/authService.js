@@ -10,9 +10,9 @@
       var payload = {
         sub: user._id,
         iat: moment().unix(),
-        exp: moment().add(1, 'minutes').unix(),
+        exp: moment().add(60, 'minutes').unix(),
       };
-      console.log(payload.iat, payload.exp);
+
       return jwt.encode(payload, config.TOKEN_SECRET);
     },
     ensureAuthenticated: function(req, res, next) {

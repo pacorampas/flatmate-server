@@ -10,8 +10,13 @@
   //parse json in requests
   app.use(bodyParser.json());
 
+  //models
   require('./models/userModel.min')(app, mongoose);
+  require('./models/flatModel.min')(app, mongoose);
+
+  //routes
   require('./routes/userRoutes.min')(app);
+  require('./routes/flatRoutes.min')(app);
 
   //allow-all-origins
   app.use(function(req, res, next) {

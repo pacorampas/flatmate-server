@@ -5,7 +5,7 @@
   var User  = mongoose.model('user');
 
   module.exports = {
-    getAll: function(req, res) {
+    getAll: function() {
       return new Promise(function(resolve, reject) {
         User.find(function(err, users) {
           if(err) {
