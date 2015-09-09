@@ -25,10 +25,8 @@
           //to update mates and owner to add their the flat
           //TODO not update a flat of users that they are in a flat yet
           userService.updateFlatByIdArray(matesAndOwner, flat._id)
-              .then(function(usersUpdated) {
-            flatService.getById(flat._id).then(function(flatCreated) {
-              res.status(200).json(flatCreated);
-            });
+                                                  .then(function(usersUpdated) {
+            res.status(200).json(flat);
           }).catch(function(err) {
             res.status(500).send(err);
           });

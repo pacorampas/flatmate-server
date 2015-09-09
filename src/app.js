@@ -29,7 +29,6 @@
     } else if (session.expired) {
       res.status(401).send({err: 'The token has expired'} );
     } else {
-      console.log(session.userId);
       req.userId = session.userId;
       next();
     }

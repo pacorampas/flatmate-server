@@ -3,6 +3,7 @@
 
   var mongoose = require('mongoose');
   var UserMongoose  = mongoose.model('user');
+  var FlatMongoose  = mongoose.model('flat');
 
   module.exports = {
     getAll: function() {
@@ -38,11 +39,13 @@
           .findOne({email: email})
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            if(err) {
-              reject(err);
-            } else {
-              resolve(user);
-            }
+            FlatMongoose.populate(user.flat, { path: 'owner mates' }, function() {
+              if(err) {
+                reject(err);
+              } else {
+                resolve(user);
+              }
+            });
           });
       });
     },
@@ -88,17 +91,18 @@
       });
     },
     getById: function(id) {
-      //TODO polulate flat -> mates
       return new Promise(function(resolve, reject) {
         UserMongoose
           .findById(id)
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            if(err) {
-              reject(err);
-            } else {
-              resolve(user);
-            }
+            FlatMongoose.populate(user.flat, { path: 'owner mates' }, function() {
+              if(err) {
+                reject(err);
+              } else {
+                resolve(user);
+              }
+            });
           });
       });
     }

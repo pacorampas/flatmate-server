@@ -3,7 +3,6 @@
 
   var mongoose = require('mongoose');
   var FlatMongoose = mongoose.model('flat');
-  var UserMongoose = mongoose.model('user');
   var userService = require('./userService.min');
 
   module.exports = {
@@ -14,12 +13,14 @@
         mates: flat.mates
       });
       return new Promise(function(resolve, reject) {
-        flat.save(function(err, user) {
-          if(err) {
-            reject(err);
-          } else {
-            resolve(user);
-          }
+        flat.save(function(err, flat) {
+          FlatMongoose.populate(flat, { path: 'owner mates' }, function() {
+            if(err) {
+              reject(err);
+            } else {
+              resolve(flat);
+            }
+          });
         });
       });
     },
