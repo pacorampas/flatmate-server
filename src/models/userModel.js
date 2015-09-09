@@ -3,18 +3,21 @@ var mongoose = require('mongoose'),
 
 var userSchema = new Schema({
   name: {
-    type: String,
-    required: true
+    type: String
   },
   email: {
     type: String,
     index: { unique: true, dropDups: true },
     required: true,
-    match: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/
   },
   password: {
     type: String,
     required: true
+  },
+  flat: {
+    type: Schema.ObjectId,
+    ref: 'flat'
   }
 });
 

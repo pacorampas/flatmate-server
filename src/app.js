@@ -15,14 +15,24 @@
   //allow-all-origins
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     next();
   });
 
   //allow only logged users
   //apis = api + secure
   app.all('/apis/*', function (req, res, next) {
-    authService.ensureAuthenticated(req, res, next);
+    var session = authService.ensureAuthenticated(req);
+
+    if (!session.token) {
+      res.status(403).send({err: 'No auth header'});
+    } else if (session.expired) {
+      res.status(401).send({err: 'The token has expired'} );
+    } else {
+      console.log(session.userId);
+      req.userId = session.userId;
+      next();
+    }
   });
 
   var server = app.listen(3000, function () {

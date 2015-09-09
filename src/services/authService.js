@@ -10,26 +10,30 @@
       var payload = {
         sub: user._id,
         iat: moment().unix(),
-        exp: moment().add(10, 'days').unix(),
+        exp: moment().add(1, 'days').unix(),
       };
 
       return jwt.encode(payload, config.TOKEN_SECRET);
     },
-    ensureAuthenticated: function(req, res, next) {
-      if (!req.headers.authorization) {
-        return res.status(403)
-          .send({err: 'No auth header'});
+    ensureAuthenticated: function(req) {
+      var token = req.headers.authorization || req.body.authorization ||
+          req.query.authorization;
+
+      if (!token) {
+        return {token: false};
       }
 
-      var token = req.headers.authorization;
-      var payload = jwt.decode(token, config.TOKEN_SECRET);
+      try {
+        var payload = jwt.decode(token, config.TOKEN_SECRET);
+      } catch(err) {
+        return {token: false}
+      }
 
       if (payload.exp <= moment().unix()) {
-        return res.status(401).send({err: 'The token has expired'} );
+        return {token: true, expired: true};
       }
 
-      req.user = payload.sub;
-      next();
+      return {token: true, expired: false, userId: payload.sub};
     }
   };
 

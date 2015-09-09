@@ -19,22 +19,28 @@
       userService.getAll().then(function(users) {
         res.status(200).json(users);
       }).catch(function(err) {
-        res.send(401, err);
+        res.status(401).send(err);
       });
     });
 
     app.post('/register', function(req, res, next) {
       userService.add(req.body).then(function(user) {
-        res.status(200).json(authService.createToken(user));
+        res.status(200).json({
+          toke: authService.createToken(user),
+          user: user
+        });
       }).catch(function(err) {
-        res.send(500, err);
+        res.status(500).send(err);
       });
     });
 
     app.get('/login', function(req, res, next) {
-      userService.getByEmail(req.body.email).then(function(user) {
-        if (req.body.password === user.password) {
-          res.status(200).json(authService.createToken(user));
+      userService.getByEmail(req.query.email).then(function(user) {
+        if (req.query.password === user.password) {
+          res.status(200).json({
+            token: authService.createToken(user),
+            user: user
+          });
         } else {
           res.send(401);
         }
@@ -43,8 +49,16 @@
       });
     });
 
+    app.get('/apis/get-user-session', function(req, res, next) {
+      userService.getById(req.userId).then(function(user) {
+        res.status(200).json({user: user});
+      }).catch(function(err) {
+        res.status(500);
+      });
+    });
+
     app.get('/apis/user/:userId', function(req, res) {
-      res.status(200).jsonp(req.user);
+      res.status(200).json(req.user);
     })
   }
 

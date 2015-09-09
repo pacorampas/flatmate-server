@@ -2,12 +2,12 @@
   'use strict';
 
   var mongoose = require('mongoose');
-  var User  = mongoose.model('user');
+  var UserMongoose  = mongoose.model('user');
 
   module.exports = {
     getAll: function() {
       return new Promise(function(resolve, reject) {
-        User.find(function(err, users) {
+        UserMongoose.find(function(err, users) {
           if(err) {
             reject(err);
           } else {
@@ -17,7 +17,7 @@
       });
     },
     add: function(user) {
-      var user = new User({
+      var user = new UserMongoose({
         name: user.name,
         email: user.email,
         password: user.password
@@ -34,26 +34,72 @@
     },
     getByEmail: function(email) {
       return new Promise(function(resolve, reject) {
-        User.find({email: email}, function(err, doc) {
-          console.log('Errr! '+err);
+        UserMongoose
+          .findOne({email: email})
+          .populate({path: 'flat'})
+          .exec(function(err, user) {
+            if(err) {
+              reject(err);
+            } else {
+              resolve(user);
+            }
+          });
+      });
+    },
+    getByEmailArray: function(emailArray, selecting) {
+      if (!selecting) {
+        selecting = ''; //select all
+      }
+      return new Promise(function(resolve, reject) {
+        UserMongoose.find({ email: { $in: emailArray }}, selecting, function(err, doc) {
           if (err) {
             reject(err);
           } else {
-            console.log(doc);
             resolve(doc);
           }
         });
       });
     },
-    getById: function(id) {
+    updateFlatByIdArray: function(usersIdArray, flatId) {
+      var conditions = {
+        _id: {
+          $in: usersIdArray
+        }
+      };
+      var update = {
+        '$set': {
+          'flat' : flatId
+        }
+      };
+      var options = {
+        multi : true //to update multiple items
+      };
       return new Promise(function(resolve, reject) {
-        User.findById(id, function(err, doc) {
+        UserMongoose.update(conditions, update, options,
+            function(err, numAffected) {
           if (err) {
+            console.log(err);
             reject(err);
           } else {
-            resolve(doc);
+            console.log(numAffected);
+            resolve(numAffected);
           }
         });
+      });
+    },
+    getById: function(id) {
+      //TODO polulate flat -> mates
+      return new Promise(function(resolve, reject) {
+        UserMongoose
+          .findById(id)
+          .populate({path: 'flat'})
+          .exec(function(err, user) {
+            if(err) {
+              reject(err);
+            } else {
+              resolve(user);
+            }
+          });
       });
     }
   }

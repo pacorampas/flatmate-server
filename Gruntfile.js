@@ -65,6 +65,14 @@ module.exports = function(grunt) {
           livereload: true
         }
       }
+    },
+    bgShell: {
+      _defaults: {
+        bg: true
+      },
+      mongod: {
+        cmd: 'mongod'
+      }
     }
   });
 
@@ -75,10 +83,18 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-lintspaces');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-express-server');
+  grunt.loadNpmTasks('grunt-bg-shell');
 
-  grunt.registerTask('build', ['clean', 'uglify:min', 'jshint', 'lintspaces', 'express:dev', 'watch']);
+  grunt.registerTask('build', [
+    'clean',
+    'uglify:min',
+    'jshint',
+    'lintspaces',
+    'express:dev',
+    'watch']
+  );
 
   // Default task(s).
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['bgShell:mongod', 'build']);
 
 };
