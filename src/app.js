@@ -59,4 +59,11 @@
     console.log('Connected to Database');
   });
 
+  //cron task for spin tasks ss mm hh dayOfMont month day
+  var CronJob = require('cron').CronJob;
+  var spinTask = new CronJob('0 0 4 * * 0-7', function() {
+    console.log(new Date());
+    console.log('You will see this message every second');
+  }, null, true, 'Europe/Madrid');
+
 })();
