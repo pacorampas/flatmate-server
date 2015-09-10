@@ -4,7 +4,18 @@
   module.exports = function(app) {
     var flatService = require('../services/flatService.min');
     var userService = require('../services/userService.min');
+    var taskService = require('../services/taskService.min');
     var authService = require('../services/authService.min');
+
+    app.param('flatId', function(req, res, next, id) {
+      flatService.getById(id).then(function(flat) {
+        req.flat = flat;
+        return next();
+      }).catch(function(err) {
+        req.flat = false;
+        return next();
+      });
+    });
 
     app.post('/apis/flat', function(req, res, next) {
       var flat = req.body;
@@ -41,6 +52,23 @@
         res.status(200).json(flats);
       }).catch(function(err) {
         res.send(500, err);
+      });
+    });
+
+    app.post('/apis/flat/:flatId/task', function(req, res, next) {
+      var flat = req.flat;
+      var task = req.body;
+      task.flatId = flat._id;
+
+      taskService.add(task).then(function(task) {
+        flat.tasks.push(task);
+        flat.save(function(err) {
+          if (!err) {
+            res.status(200).json(flat);
+          } else {
+            res.status(500);
+          }
+        });
       });
     });
   }

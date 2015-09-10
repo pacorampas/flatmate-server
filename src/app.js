@@ -47,10 +47,12 @@
   //models
   require('./models/userModel.min')(app, mongoose);
   require('./models/flatModel.min')(app, mongoose);
+  require('./models/taskModel.min')(app, mongoose);
 
   //routes
   require('./routes/userRoutes.min')(app);
   require('./routes/flatRoutes.min')(app);
+  require('./routes/taskRoutes.min')(app);
 
   mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
     if(err) console.log(err);

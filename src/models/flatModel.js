@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
     Schema   = mongoose.Schema;
-var user = mongoose.model('user');
 
 var flatSchema = new Schema({
   name: {
@@ -15,6 +14,12 @@ var flatSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'user'
+    }
+  ],
+  tasks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'task'
     }
   ]
 });

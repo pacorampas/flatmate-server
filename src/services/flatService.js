@@ -14,7 +14,7 @@
       });
       return new Promise(function(resolve, reject) {
         flat.save(function(err, flat) {
-          FlatMongoose.populate(flat, { path: 'owner mates' }, function() {
+          FlatMongoose.populate(flat, { path: 'owner mates tasks' }, function() {
             if(err) {
               reject(err);
             } else {
@@ -28,7 +28,7 @@
       return new Promise(function(resolve, reject) {
         FlatMongoose
           .find()
-          .populate({path: 'owner mates'})
+          .populate({path: 'owner mates tasks'})
           .exec(function(err, flats) {
             if(err) {
               reject(err);
@@ -42,7 +42,7 @@
       return new Promise(function(resolve, reject) {
         FlatMongoose
           .findById(id)
-          .populate({path: 'owner mates'})
+          .populate({path: 'owner mates tasks'})
           .exec(function(err, flats) {
             if(err) {
               reject(err);

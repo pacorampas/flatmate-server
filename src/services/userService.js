@@ -39,7 +39,7 @@
           .findOne({email: email})
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            FlatMongoose.populate(user.flat, { path: 'owner mates' }, function() {
+            FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
               if(err) {
                 reject(err);
               } else {
@@ -96,7 +96,7 @@
           .findById(id)
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            FlatMongoose.populate(user.flat, { path: 'owner mates' }, function() {
+            FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
               if(err) {
                 reject(err);
               } else {
