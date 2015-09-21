@@ -26,5 +26,8 @@
     "grunt-express-server": "^0.5.1",
     "grunt-lintspaces": "^0.7.0",
     "mongodb": "^1.4.39"
+  },
+  "engines": {
+    "node": "0.12.7"
   }
 }
