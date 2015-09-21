@@ -2,8 +2,8 @@
   'use strict';
 
   module.exports = function(app) {
-    var userService = require('../services/userService.min');
-    var authService = require('../services/authService.min');
+    var userService = require('../services/userService');
+    var authService = require('../services/authService');
 
     app.param('userId', function(req, res, next, id) {
       userService.getById(id).then(function(user) {

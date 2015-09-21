@@ -10,24 +10,25 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          script: 'dest/src/app.min.js'
+          script: 'dest/src/app.js'
         }
       }
     },
     uglify: {
       options: {
+        beautify: false,
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       my_target: {
         files: {
-          'dest/app.min.js': ['src/*.js', 'src/*/*.js']
+          'dest/app.js': ['src/*.js', 'src/*/*.js']
         }
       },
       min: {
         files: grunt.file.expandMapping(['src/*.js', 'src/**/*.js'], 'dest/', {
             rename: function(destBase, destPath) {
               console.log(destBase, destPath);
-              return destBase+destPath.replace('.js', '.min.js');
+              return destBase+destPath.replace('.js', '.js');
             }
         })
       }

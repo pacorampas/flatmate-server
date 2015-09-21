@@ -2,10 +2,9 @@
   'use strict';
 
   module.exports = function(app) {
-    var flatService = require('../services/flatService.min');
-    var userService = require('../services/userService.min');
-    var taskService = require('../services/taskService.min');
-    var authService = require('../services/authService.min');
+    var flatService = require('../services/flatService');
+    var userService = require('../services/userService');
+    var taskService = require('../services/taskService');
 
     app.param('flatId', function(req, res, next, id) {
       flatService.getById(id).then(function(flat) {
@@ -13,6 +12,16 @@
         return next();
       }).catch(function(err) {
         req.flat = false;
+        return next();
+      });
+    });
+
+    app.param('taskId', function(req, res, next, id) {
+      taskService.getById(id).then(function(task) {
+        req.task = task;
+        return next();
+      }).catch(function(err) {
+        req.task = false;
         return next();
       });
     });
@@ -69,6 +78,25 @@
             res.status(500);
           }
         });
+      });
+    });
+
+    app.post('/apis/flat/:flatId/spin-task', function(req, res, next) {
+      var flat = req.flat;
+      var spinTask = req.body;
+      spinTask.flat = flat;
+
+      taskService.addSpinTask(spinTask).then(function(spinTask) {
+        flat.tasks.push(spinTask);
+        flat.save(function(err) {
+          if (!err) {
+            res.status(200).json(flat);
+          } else {
+            res.status(500);
+          }
+        });
+      }).catch(function(err) {
+        res.status(500).json(err);
       });
     });
   }

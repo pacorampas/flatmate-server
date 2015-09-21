@@ -1,13 +1,16 @@
 (function() {
   'use strict';
 
+  require('./helpers/array-prototype');
+
   var express = require('express'),
       app = express(),
       bodyParser = require('body-parser'),
       form = require('express-form'),
       mongoose = require('mongoose');
 
-  var authService = require('./services/authService.min');
+  var authService = require('./services/authService');
+
 
   //parse json in requests
   app.use(bodyParser.json());
@@ -45,14 +48,13 @@
   });
 
   //models
-  require('./models/userModel.min')(app, mongoose);
-  require('./models/flatModel.min')(app, mongoose);
-  require('./models/taskModel.min')(app, mongoose);
+  require('./models/userModel')(app, mongoose);
+  require('./models/flatModel')(app, mongoose);
+  require('./models/taskModel')(app, mongoose);
 
   //routes
-  require('./routes/userRoutes.min')(app);
-  require('./routes/flatRoutes.min')(app);
-  require('./routes/taskRoutes.min')(app);
+  require('./routes/userRoutes')(app);
+  require('./routes/flatRoutes')(app);
 
   mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
     if(err) console.log(err);
@@ -61,9 +63,9 @@
 
   //cron task for spin tasks ss mm hh dayOfMont month day
   var CronJob = require('cron').CronJob;
+  var TaskMongoose = mongoose.model('task');
   var spinTask = new CronJob('0 0 4 * * 0-7', function() {
-    console.log(new Date());
-    console.log('You will see this message every second');
+    TaskMongoose.generateNextSpinHistory();
   }, null, true, 'Europe/Madrid');
 
 })();

@@ -3,7 +3,7 @@
 
   var mongoose = require('mongoose');
   var FlatMongoose = mongoose.model('flat');
-  var userService = require('./userService.min');
+  var userService = require('./userService');
 
   module.exports = {
     add: function(flat) {
