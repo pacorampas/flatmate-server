@@ -6,7 +6,6 @@
   var express = require('express'),
       app = express(),
       bodyParser = require('body-parser'),
-      form = require('express-form'),
       mongoose = require('mongoose');
 
   var authService = require('./services/authService');
@@ -37,7 +36,9 @@
     }
   });
 
-  var server = app.listen(3000, function () {
+  app.set('port', (process.env.PORT || 5000));
+
+  var server = app.listen(app.get('port'), function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log('Example app listening at http://%s:%s', host, port);
@@ -56,7 +57,8 @@
   require('./routes/userRoutes')(app);
   require('./routes/flatRoutes')(app);
 
-  mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
+  //mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
+  mongoose.connect('mongodb://admin:admin@ds051553.mongolab.com:51553/flatmate', function(err, res) {
     if(err) console.log(err);
     console.log('Connected to Database');
   });

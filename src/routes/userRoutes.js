@@ -42,10 +42,10 @@
             user: user
           });
         } else {
-          res.send(401);
+          res.sendStatus(401);
         }
       }).catch(function(err) {
-        res.send(401);
+        res.sendStatus(401);
       });
     });
 
