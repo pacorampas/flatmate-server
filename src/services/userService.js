@@ -39,12 +39,12 @@
           .findOne({email: email})
           .populate({path: 'flat'})
           .exec(function(err, user) {
+            if(err) {
+              reject(err);
+              return;
+            }
             FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
-              if(err) {
-                reject(err);
-              } else {
-                resolve(user);
-              }
+              resolve(user);
             });
           });
       });
