@@ -128,17 +128,18 @@ taskSchema.statics.getAllSpinTasks = function getAllSpinTasks () {
 taskSchema.statics.generateNextSpinHistory = function generateNextSpinHistory () {
   this.getAllSpinTasks().then(function(allSpinTasks) {
     allSpinTasks.forEach(function(spinTask) {
-      if (spinTask.history.length) {
+      if (spinTask.history) {
         if (spinTask.timeToEnd <= 0) {
           FlatMongoose.populate(spinTask, { path: 'flat' }, function() {
-            FlatMongoose.populate(spinTask.flat, { path: 'mates' }, function() {
-              spinTask.nextHistoryItem(spinTask.flat.mates);
+            FlatMongoose.populate(spinTask.flat, { path: 'mates owner' }, function() {
+              var matesAndOwner = spinTask.flat.mates.concat([spinTask.flat.owner]);
+              spinTask.nextHistoryItem(matesAndOwner);
               //TODO add something to advice if the saved was succesfully
               spinTask.save();
             });
           });
         } else {
-          console.log('The spintask with id: '+spinTask._id+' doesn\'t'+
+          console.log('The spintask with id: '+spinTask._id+' doesn\'t '+
                       'need to be update');
         }
       }

@@ -33,7 +33,9 @@
       userService.getByEmailArray(flat.mates, '_id').then(function(users) {
         var matesArray = new Array();
         for(var key in users) {
-          matesArray.push(users[key]._id);
+          if (users[key]._id) {
+            matesArray.push(users[key]._id);
+          }
         }
         flat.mates = matesArray;
 

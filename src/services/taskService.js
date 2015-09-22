@@ -43,7 +43,8 @@
         spin: true
       });
 
-      spinTask.createHistoryItem(spinTaskReq.flat.mates);
+      var matesAndOwner = spinTaskReq.flat.mates.concat([ spinTaskReq.flat.owner ]);
+      spinTask.createHistoryItem(matesAndOwner);
 
       return new Promise(function(resolve, reject) {
         spinTask.save(function(err, spinTask) {
@@ -56,7 +57,8 @@
       });
     },
     nextHistorySpinTask: function(spinTask, flat) {
-      spinTask.nextHistoryItem(flat.mates);
+      var matesAndOwner = flat.mates.concat([flat.owner]);
+      spinTask.nextHistoryItem(matesAndOwner);
     }
   }
 
