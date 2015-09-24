@@ -53,7 +53,7 @@
       userService.getById(req.userId).then(function(user) {
         res.status(200).json({user: user});
       }).catch(function(err) {
-        res.status(500);
+        res.status(500).send(err);
       });
     });
 

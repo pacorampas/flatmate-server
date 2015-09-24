@@ -39,11 +39,11 @@
           .findOne({email: email})
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            if(err || !user) {
+            if(err) {
               reject(err);
-              return;
-            }
-            if (user.flat) {
+            } else if (!user) {
+              reject('No user registered');
+            } else if (user.flat) {
               FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
                 resolve(user);
               });
@@ -86,10 +86,8 @@
         UserMongoose.update(conditions, update, options,
             function(err, numAffected) {
           if (err) {
-            console.log(err);
             reject(err);
           } else {
-            console.log(numAffected);
             resolve(numAffected);
           }
         });
@@ -101,14 +99,18 @@
           .findById(id)
           .populate({path: 'flat'})
           .exec(function(err, user) {
-            FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
-              if(err) {
-                reject(err);
-              } else {
+            if (err) {
+              reject(err);
+            } else if (!user){
+              reject('No user registered.');
+            } else if (user.flat) {
+              FlatMongoose.populate(user.flat, { path: 'owner mates tasks' }, function() {
                 resolve(user);
-              }
-            });
-          });
+              });
+            } else {
+              resolve(user);
+            }
+        });
       });
     }
   }

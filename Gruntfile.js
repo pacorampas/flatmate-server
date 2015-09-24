@@ -92,8 +92,8 @@ module.exports = function(grunt) {
     'jshint',
     'lintspaces',
     'express:dev',
-    'watch']
-  );
+    'watch'
+  ]);
 
   // Default task(s).
   grunt.registerTask('default', ['bgShell:mongod', 'build']);

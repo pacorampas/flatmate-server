@@ -77,7 +77,7 @@
           if (!err) {
             res.status(200).json(flat);
           } else {
-            res.status(500);
+            res.status(500).send(err);
           }
         });
       });
@@ -94,7 +94,7 @@
           if (!err) {
             res.status(200).json(flat);
           } else {
-            res.status(500);
+            res.status(500).send(err);
           }
         });
       }).catch(function(err) {
