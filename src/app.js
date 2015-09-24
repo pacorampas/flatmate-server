@@ -66,7 +66,7 @@
   //cron task for spin tasks ss mm hh dayOfMont month day
   var CronJob = require('cron').CronJob;
   var TaskMongoose = mongoose.model('task');
-  var spinTask = new CronJob('0 0 4 * * 0-7', function() {
+  var spinTask = new CronJob('0 0 3 * * 0-7', function() {
     TaskMongoose.generateNextSpinHistory();
   }, null, true, 'Europe/Madrid');
 

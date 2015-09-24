@@ -56,10 +56,12 @@ taskSchema.methods.createHistoryItem = function (mates) {
 }
 
 taskSchema.methods.nextHistoryItem = function (mates) {
+  var dateStart = moment().hours(2).minutes(59);
+
   var historyItem = {
     subtasks: [],
     period: this.period,
-    start: new Date()
+    start: dateStart._d
   };
 
   var subtasksCurrent = this.subtasksIndexCurrent;
@@ -136,6 +138,8 @@ taskSchema.statics.generateNextSpinHistory = function generateNextSpinHistory ()
               spinTask.nextHistoryItem(matesAndOwner);
               //TODO add something to advice if the saved was succesfully
               spinTask.save();
+              console.log('Generate new history fot the spinTask with id: '+
+                  spinTask._id);
             });
           });
         } else {

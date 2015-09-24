@@ -10,7 +10,7 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          script: 'dest/src/app.js'
+          script: 'src/app.js'
         }
       }
     },
