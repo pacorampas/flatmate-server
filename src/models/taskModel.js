@@ -56,7 +56,7 @@ taskSchema.methods.createHistoryItem = function (mates) {
 }
 
 taskSchema.methods.nextHistoryItem = function (mates) {
-  var dateStart = moment().hours(2).minutes(59);
+  var dateStart = moment().hours(3).minutes(20);
 
   var historyItem = {
     subtasks: [],
@@ -127,8 +127,9 @@ taskSchema.statics.getAllSpinTasks = function getAllSpinTasks () {
   });
 };
 
-taskSchema.statics.generateNextSpinHistory = function generateNextSpinHistory () {
+taskSchema.statics.generateNextSpinHistory = function generateNextSpinHistory (callback) {
   this.getAllSpinTasks().then(function(allSpinTasks) {
+    var lastItem = allSpinTasks.lastItem();
     allSpinTasks.forEach(function(spinTask) {
       if (spinTask.history) {
         if (spinTask.timeToEnd <= 0) {
@@ -137,17 +138,28 @@ taskSchema.statics.generateNextSpinHistory = function generateNextSpinHistory ()
               var matesAndOwner = spinTask.flat.mates.concat([spinTask.flat.owner]);
               spinTask.nextHistoryItem(matesAndOwner);
               //TODO add something to advice if the saved was succesfully
-              spinTask.save();
-              console.log('Generate new history fot the spinTask with id: '+
+              spinTask.save(function(err) {
+                if (err) {
+                  console.log('ERROR, The spintask with id: '+spinTask._id+
+                      'was fail in saving.');
+                }
+                console.log('Generate new history for the spinTask with id: '+
                   spinTask._id);
+                if (lastItem === spinTask && typeof callback === 'function') {
+                  callback();
+                }
+              });
             });
           });
         } else {
           console.log('The spintask with id: '+spinTask._id+' doesn\'t '+
                       'need to be update');
+          if (lastItem === spinTask && typeof callback === 'function') {
+            callback();
+          }
         }
       }
-    })
+    });
   });
 }
 

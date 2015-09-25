@@ -49,9 +49,9 @@
   });
 
   //models
-  require('./models/userModel')(app, mongoose);
-  require('./models/flatModel')(app, mongoose);
-  require('./models/taskModel')(app, mongoose);
+  require('./models/userModel')();
+  require('./models/flatModel')();
+  require('./models/taskModel')();
 
   //routes
   require('./routes/userRoutes')(app);
@@ -62,12 +62,5 @@
     if(err) console.log(err);
     console.log('Connected to Database');
   });
-
-  //cron task for spin tasks ss mm hh dayOfMont month day
-  var CronJob = require('cron').CronJob;
-  var TaskMongoose = mongoose.model('task');
-  var spinTask = new CronJob('0 0 3 * * 0-7', function() {
-    TaskMongoose.generateNextSpinHistory();
-  }, null, true, 'Europe/Madrid');
 
 })();
