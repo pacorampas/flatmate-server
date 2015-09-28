@@ -58,14 +58,20 @@
       if (!selecting) {
         selecting = ''; //select all
       }
+
       return new Promise(function(resolve, reject) {
-        UserMongoose.find({ email: { $in: emailArray }}, selecting, function(err, doc) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(doc);
-          }
-        });
+        UserMongoose
+          .find()
+          .where('email').in(emailArray)
+          .select(selecting)
+          .limit(5)
+          .exec(function(err, doc) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(doc);
+            }
+          });
       });
     },
     updateFlatByIdArray: function(usersIdArray, flatId) {

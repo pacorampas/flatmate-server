@@ -1,9 +1,12 @@
 (function() {
   'use strict';
 
+  var mongoose = require('mongoose');
+
   module.exports = function(app) {
     var userService = require('../services/userService');
     var authService = require('../services/authService');
+    var UserMongoose  = mongoose.model('user');
 
     app.param('userId', function(req, res, next, id) {
       userService.getById(id).then(function(user) {
@@ -59,7 +62,29 @@
 
     app.get('/apis/user/:userId', function(req, res) {
       res.status(200).json(req.user);
-    })
+    });
+
+    app.get('/apis/user-exist', function(req, res) {
+      var email = req.query.email;
+      var notIn = JSON.parse(req.query.notIn);
+      var emailRegExp = new RegExp('^'+email+'.*', 'i');
+      var emailArray = [emailRegExp];
+      console.log(notIn);
+
+      UserMongoose
+        .find()
+        .where('email').in(emailArray)
+        .where('email').nin(notIn) //nin not in
+        .select('email _id')
+        .limit(5)
+        .exec(function(err, users) {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.status(200).json(users);
+          }
+        });
+    });
   }
 
 })();
