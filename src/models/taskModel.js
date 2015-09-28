@@ -16,6 +16,9 @@ var taskSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'user'
   },
+  done: {
+    type: Boolean
+  },
   //TODO extend schemas
   //is better have an extend of taskSchema to spinTaskSchema
   //but then, I can't get two differents types of schemas in flat.tasks
@@ -39,7 +42,8 @@ var taskSchema = new Schema({
           who: {
             type: Schema.ObjectId,
             ref: 'user'
-          }
+          },
+          done: Boolean
         }
       ],
       period: String,
@@ -47,6 +51,32 @@ var taskSchema = new Schema({
     }
   ]
 });
+
+taskSchema.methods.markAsDone = function (userId) {
+  var self = this;
+
+  if (!this.spin) {
+    this.done = true;
+  } else {
+    var subtasks = this.history.lastItem().subtasks;
+    for(var i = 0, l = subtasks.length; i < l; i++) {
+      if (subtasks[i].who == userId) {
+        subtasks[i].done = true;
+        break;
+      }
+    }
+  }
+
+  return new Promise(function(resolve, reject) {
+    self.save(function(err, task) {
+      if(!err) {
+        resolve(task);
+      } else {
+        reject();
+      }
+    });
+  });
+}
 
 //TODO, split methods and statics in other file
 taskSchema.methods.createHistoryItem = function (mates) {
@@ -75,7 +105,7 @@ taskSchema.methods.nextHistoryItem = function (mates) {
   var matesLength = mates.length;
 
   for(var i = 0; i < subtasksLenght && i < matesLength; i++) {
-    var subtasksHistoryItem = {};
+    var subtasksHistoryItem = {done: false};
     subtasksHistoryItem.subtask = subtasks.next();
     subtasksHistoryItem.who = mates.next()._id;
     historyItem.subtasks.push(subtasksHistoryItem);

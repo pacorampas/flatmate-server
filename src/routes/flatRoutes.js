@@ -101,6 +101,23 @@
         res.status(500).json(err);
       });
     });
+
+    app.post('/apis/flat/:flatId/task/:taskId', function(req, res, next) {
+      var flat = req.flat;
+      var task = req.task;
+      var userId = req.userId;
+
+      task.markAsDone(userId).then(function(updatedTask) {
+        flatService.getById(flat._id).then(function(flat) {
+          res.status(200).json({task: updatedTask, flat: flat});
+        }).catch(function() {
+          res.status(500).send();
+        });
+      }).catch(function() {
+        res.status(500).send();
+      });
+    });
+
   }
 
 })();

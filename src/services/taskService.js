@@ -9,7 +9,8 @@
       var task = new TaskMongoose({
         title: task.title,
         flat: task.flatId,
-        who: task.who
+        who: task.who,
+        done: false
       });
       return new Promise(function(resolve, reject) {
         task.save(function(err, task) {
@@ -40,7 +41,8 @@
         flat: spinTaskReq.flat._id,
         period: spinTaskReq.period,
         subtasks: spinTaskReq.subtasks,
-        spin: true
+        spin: true,
+        done: false
       });
 
       var matesAndOwner = spinTaskReq.flat.mates.concat([ spinTaskReq.flat.owner ]);
