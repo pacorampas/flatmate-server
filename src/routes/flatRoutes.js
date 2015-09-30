@@ -1,10 +1,13 @@
 (function() {
   'use strict';
 
+  var mongoose = require('mongoose');
+
   module.exports = function(app) {
     var flatService = require('../services/flatService');
     var userService = require('../services/userService');
     var taskService = require('../services/taskService');
+    var FlatMongoose = mongoose.model('flat');
 
     app.param('flatId', function(req, res, next, id) {
       flatService.getById(id).then(function(flat) {
@@ -27,33 +30,37 @@
     });
 
     app.post('/apis/flat', function(req, res, next) {
-      var flat = req.body;
-      flat.ownerId = req.userId;
+      var flatReq = req.body;
+      flatReq.ownerId = req.userId;
 
-      userService.getByEmailArray(flat.mates, '_id').then(function(users) {
-        var matesArray = new Array();
-        for(var key in users) {
-          if (users[key]._id) {
-            matesArray.push(users[key]._id);
+      var flat = new FlatMongoose({
+        name: flatReq.name,
+        owner: flatReq.ownerId
+      });
+
+      flat.setMates(flatReq.mates, function() {
+        flat.save(function(err, flat) {
+          if (!err) {
+            FlatMongoose.getById(flat._id).then(function(flat) {
+              res.status(200).json(flat);
+            });
+          } else {
+            res.status(500).json(err);
           }
-        }
-        flat.mates = matesArray;
+        });
+      });
+    });
 
-        flatService.add(flat).then(function(flat) {
-          var matesAndOwner = flat.mates.slice(0); //.slice(0) clone the array
-          matesAndOwner.push(flat.owner);
+    app.put('/apis/flat', function(req, res, next) {
+      var flatReq = req.body;
 
-          //TODO polulate save to users
-          //to update mates and owner to add their the flat
-          //TODO not update a flat of users that they are in a flat yet
-          userService.updateFlatByIdArray(matesAndOwner, flat._id)
-                                                  .then(function(usersUpdated) {
+      FlatMongoose.getById(flatReq._id).then(function(flat) {
+        var reqMates = flatReq.mates;
+        flat.name = flatReq.name;
+        flat.updateMates(reqMates, function(flat) {
+          FlatMongoose.getById(flat._id).then(function(flat) {
             res.status(200).json(flat);
-          }).catch(function(err) {
-            res.status(500).send(err);
           });
-        }).catch(function(err) {
-          res.status(500).send(err);
         });
       });
     });
