@@ -87,6 +87,11 @@ taskSchema.methods.createHistoryItem = function (mates) {
 
 taskSchema.methods.nextHistoryItem = function (mates) {
   var dateStart = moment().hours(3).minutes(20);
+  //it is to force the weekly task to start on monday
+  if (this.period === 1) {
+    dateStart.weekday(1);
+    console.log(dateStart);
+  }
 
   var historyItem = {
     subtasks: [],
