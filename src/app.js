@@ -58,8 +58,8 @@
   require('./routes/userRoutes')(app);
   require('./routes/flatRoutes')(app);
 
-  mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
-  //mongoose.connect('mongodb://admin:admin@ds051553.mongolab.com:51553/flatmate', function(err, res) {
+  //mongoose.connect('mongodb://localhost:27017/flatmate', function(err, res) {
+  mongoose.connect('mongodb://admin:admin@ds051553.mongolab.com:51553/flatmate', function(err, res) {
     if(err) console.log(err);
     console.log('Connected to Database');
   });
